@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problema de Mochila - Excursionista</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .nav-buttons {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #eee;
+        }
+
+        .nav-buttons a {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .nav-buttons .btn-staffing {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .nav-buttons .btn-staffing:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-buttons .btn-mochila {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-buttons .btn-mochila:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .highlight-solution {
+            background: white;
+            color: #f5576c;
+            padding: 15px 30px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            font-size: 2em;
+            color: #f5576c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #f5576c;
+        }
+
+        .section h3 {
+            font-size: 1.4em;
+            color: #f093fb;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe0e6 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #f5576c;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: #f5576c;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .card-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #f093fb;
+        }
+
+        .card-unit {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tbody tr:hover {
+            background: #fff5f7;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .valor-positivo {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .valor-negativo {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .seleccionado {
+            background: #d4edda;
+            color: #155724;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .no-seleccionado {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .checklist {
+            background: #fff5f7;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #f5576c;
+            margin: 20px 0;
+        }
+
+        .checklist ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .checklist li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ffe0e6;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .formula-box {
+            background: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .footer {
+            background: #f5f7fa;
+            padding: 30px 40px;
+            text-align: center;
+            color: #666;
+            border-top: 2px solid #eee;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #f5576c;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .badge.optimal {
+            background: #27ae60;
+        }
+
+        .badge.warning {
+            background: #f39c12;
+        }
+
+        .badge.danger {
+            background: #e74c3c;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #f5576c;
+        }
+
+        .comparison-card h4 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .comparison-card p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .key-insight {
+            background: linear-gradient(135deg, #fff5e1 0%, #ffe0b2 100%);
+            padding: 20px;
+            border-left: 5px solid #ff9800;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .key-insight strong {
+            color: #e65100;
+        }
+
+        .mochilas-visual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .mochila {
+            background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
+            padding: 30px;
+            border-radius: 10px;
+            border: 3px solid #f5576c;
+            text-align: center;
+        }
+
+        .mochila h4 {
+            font-size: 1.3em;
+            color: #f5576c;
+            margin-bottom: 20px;
+        }
+
+        .mochila-items {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            min-height: 150px;
+        }
+
+        .mochila-item {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .mochila-stats {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .mochila-stats p {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .section h2 {
+                font-size: 1.5em;
+            }
+
+            .mochilas-visual {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- NAV BUTTONS -->
+        <div class="nav-buttons">
+            <a href="index.html" class="btn-staffing">🏪 Ejercicio 1: Staffing Farmatodo</a>
+            <span style="font-weight: bold; color: #f5576c;">← Estás aquí →</span>
+            <a href="ejercicio2_mochila.html" class="btn-mochila">🎒 Ejercicio 2: Problema de Mochila</a>
+        </div>
+
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🎒 Problema del Excursionista - Mochila 0/1</h1>
+            <p>Maximizar Valor sin Exceder Restricción de Peso</p>
+            <div class="highlight-solution">
+                💡 Valor Máximo: <span style="color: #27ae60;">130 Unidades</span> | Peso: <span style="color: #27ae60;">58/60 libras</span>
+            </div>
+        </div>
+
+        <!-- CONTENIDO -->
+        <div class="content">
+            <!-- SECCIÓN 1: DESCRIPCIÓN -->
+            <div class="section">
+                <h2>📋 Descripción del Problema</h2>
+                <p style="font-size: 1.05em; line-height: 1.8; color: #444; margin-bottom: 20px;">
+                    Un excursionista planea salir de campamento y quiere llevar 5 artículos consigo. 
+                    Sin embargo, tiene una restricción: <strong>puede cargar como máximo 60 libras</strong>. 
+                    Cada artículo tiene un peso y un valor asignado. <strong>¿Cuál es la combinación óptima 
+                    de artículos que maximiza el valor total sin exceder el peso límite?</strong>
+                </p>
+
+                <h3>📦 Artículos Disponibles</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Artículo</th>
+                            <th>Peso (en libras)</th>
+                            <th>Valor</th>
+                            <th>Relación Valor/Peso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1</strong></td>
+                            <td>52</td>
+                            <td>100</td>
+                            <td>1.923</td>
+                        </tr>
+                        <tr style="background: #fff5f7;">
+                            <td><strong>2</strong></td>
+                            <td>23</td>
+                            <td>60</td>
+                            <td><strong>2.609</strong> ⭐</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3</strong></td>
+                            <td>35</td>
+                            <td>70</td>
+                            <td>2.000</td>
+                        </tr>
+                        <tr style="background: #fff5f7;">
+                            <td><strong>4</strong></td>
+                            <td>15</td>
+                            <td>15</td>
+                            <td>1.000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>5</strong></td>
+                            <td>7</td>
+                            <td>15</td>
+                            <td>2.143</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="margin-top: 20px; font-size: 0.95em; color: #666;">
+                    <strong>Restricción:</strong> Peso máximo = 60 libras
+                </p>
+            </div>
+
+            <!-- SECCIÓN 2: SOLUCIÓN ÓPTIMA -->
+            <div class="section">
+                <h2>✅ Solución Óptima</h2>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-title">Valor Máximo</div>
+                        <div class="card-value">130</div>
+                        <div class="card-unit">unidades</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Peso Total Usado</div>
+                        <div class="card-value">58</div>
+                        <div class="card-unit">de 60 libras (96%)</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Artículos Seleccionados</div>
+                        <div class="card-value">2</div>
+                        <div class="card-unit">de 5 disponibles</div>
+                    </div>
+                </div>
+
+                <h3>🎒 Mochila Óptima - Artículos a Llevar</h3>
+
+                <div class="mochilas-visual">
+                    <div class="mochila">
+                        <h4>✓ Artículos Seleccionados</h4>
+                        <div class="mochila-items">
+                            <div class="mochila-item">
+                                <strong>Artículo 2</strong><br>
+                                Peso: 23 libras | Valor: 60
+                            </div>
+                            <div class="mochila-item">
+                                <strong>Artículo 3</strong><br>
+                                Peso: 35 libras | Valor: 70
+                            </div>
+                        </div>
+                        <div class="mochila-stats">
+                            <p>Peso Total: <span class="valor-positivo">58 libras</span></p>
+                            <p>Valor Total: <span class="valor-positivo">130 unidades</span></p>
+                        </div>
+                    </div>
+
+                    <div class="mochila">
+                        <h4>✗ Artículos No Seleccionados</h4>
+                        <div class="mochila-items">
+                            <div style="background: #f8d7da; color: #721c24; padding: 12px; margin: 8px 0; border-radius: 6px; border-left: 4px solid #e74c3c;">
+                                Artículo 1: 52 lb (demasiado pesado)
+                            </div>
+                            <div style="background: #f8d7da; color: #721c24; padding: 12px; margin: 8px 0; border-radius: 6px; border-left: 4px solid #e74c3c;">
+                                Artículo 4: 15 lb (bajo valor)
+                            </div>
+                            <div style="background: #f8d7da; color: #721c24; padding: 12px; margin: 8px 0; border-radius: 6px; border-left: 4px solid #e74c3c;">
+                                Artículo 5: 7 lb (bajo valor)
+                            </div>
+                        </div>
+                        <div class="mochila-stats">
+                            <p>Capacidad restante: <span style="color: #f5576c;">2 libras</span></p>
+                            <p style="font-size: 0.9em; color: #999;">No hay artículos que quepan</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-insight">
+                    <strong>💡 Insight Clave:</strong> Los artículos 2 y 3 tienen la mejor combinación de 
+                    valor y peso. Aunque el artículo 1 tiene mayor valor absoluto (100), es demasiado pesado 
+                    (52 libras) y no deja espacio para otros artículos. La solución óptima aprovecha mejor 
+                    la capacidad disponible.
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: FORMULACIÓN MATEMÁTICA -->
+            <div class="section">
+                <h2>📐 Formulación Matemática</h2>
+
+                <h3>Variables de Decisión</h3>
+                <div class="formula-box">
+x_i = 1 si se lleva el artículo i
+x_i = 0 si no se lleva el artículo i
+(donde i = 1, 2, 3, 4, 5)
+
+Estas son variables BINARIAS (solo pueden ser 0 o 1)
+                </div>
+
+                <h3>Función Objetivo (MAXIMIZAR)</h3>
+                <div class="formula-box">
+Z = 100x₁ + 60x₂ + 70x₃ + 15x₄ + 15x₅
+
+Objetivo: Maximizar el valor total de los artículos llevados
+                </div>
+
+                <h3>Restricción de Peso</h3>
+                <div class="formula-box">
+52x₁ + 23x₂ + 35x₃ + 15x₄ + 7x₅ ≤ 60
+
+El peso total no puede exceder 60 libras
+                </div>
+
+                <h3>Clasificación del Problema</h3>
+                <div class="checklist">
+                    <ul>
+                        <li><strong>Tipo:</strong> Problema de Mochila 0/1 (Knapsack Problem)</li>
+                        <li><strong>Modelo:</strong> Programación Lineal Entera Binaria</li>
+                        <li><strong>Variables:</strong> 5 variables binarias (x₁ a x₅)</li>
+                        <li><strong>Restricciones:</strong> 1 restricción de peso + dominio binario</li>
+                        <li><strong>Objetivo:</strong> Maximizar valor bajo restricción de capacidad</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 4: ANÁLISIS COMPARATIVO -->
+            <div class="section">
+                <h2>🔍 Análisis Comparativo</h2>
+
+                <h3>Método Óptimo vs Método Heurístico (Greedy)</h3>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Método Óptimo</th>
+                            <th>Método Heurístico (Greedy)</th>
+                            <th>Diferencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Criterio</strong></td>
+                            <td>Programación Lineal</td>
+                            <td>Mayor Valor/Peso</td>
+                            <td>—</td>
+                        </tr>
+                        <tr style="background: #fff5f7;">
+                            <td><strong>Artículos</strong></td>
+                            <td>2, 3</td>
+                            <td>2, 5, 4</td>
+                            <td>Diferente</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Peso Total</strong></td>
+                            <td>58 libras</td>
+                            <td>45 libras</td>
+                            <td>Óptimo usa más</td>
+                        </tr>
+                        <tr style="background: #fff5f7;">
+                            <td><strong>Valor Total</strong></td>
+                            <td><span class="valor-positivo">130 ✓</span></td>
+                            <td><span class="valor-negativo">90</span></td>
+                            <td><strong>+40 (44% mejor)</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Conclusión</strong></td>
+                            <td><span class="badge optimal">ÓPTIMO</span></td>
+                            <td><span class="badge warning">SUBÓPTIMO</span></td>
+                            <td>Óptimo es superior</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="key-insight">
+                    <strong>📊 Importante:</strong> El método heurístico (greedy) de seleccionar por mayor 
+                    relación valor/peso NO garantiza la solución óptima en problemas de mochila 0/1. 
+                    La solución correcta requiere programación lineal entera.
+                </div>
+            </div>
+
+            <!-- SECCIÓN 5: EXPLICACIÓN INTUITIVA -->
+            <div class="section">
+                <h2>💭 Explicación Intuitiva</h2>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>❌ ¿Por qué NO llevar Artículo 1?</h4>
+                        <p>Aunque tiene el mayor valor (100), pesa 52 libras.</p>
+                        <p>Si lo llevas, solo te quedan 8 libras, y no hay otra combinación mejor.</p>
+                        <p>Mejor: llevar dos artículos más pequeños con mayor valor total.</p>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4>✅ ¿Por qué SÍ llevar Artículos 2 y 3?</h4>
+                        <p>Artículo 2: Excelente relación valor/peso (2.609)</p>
+                        <p>Artículo 3: Buen valor absoluto (70) con peso moderado (35)</p>
+                        <p>Juntos: Maximizan valor (130) usando casi toda la capacidad (58/60)</p>
+                    </div>
+                </div>
+
+                <h3>Alternativas Consideradas</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Combinación</th>
+                            <th>Artículos</th>
+                            <th>Peso</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Opción 1</strong></td>
+                            <td>Solo Art. 1</td>
+                            <td>52</td>
+                            <td>100</td>
+                            <td><span class="badge warning">Subóptimo</span></td>
+                        </tr>
+                        <tr style="background: #d4edda;">
+                            <td><strong>Opción 2 (ÓPTIMO)</strong></td>
+                            <td>Art. 2 + 3</td>
+                            <td>58</td>
+                            <td><strong>130</strong></td>
+                            <td><span class="badge optimal">✓ MEJOR</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Opción 3</strong></td>
+                            <td>Art. 1 + 5</td>
+                            <td>59</td>
+                            <td>115</td>
+                            <td><span class="badge warning">Subóptimo</span></td>
+                        </tr>
+                        <tr style="background: #fff5f7;">
+                            <td><strong>Opción 4</strong></td>
+                            <td>Art. 2 + 5 + 4</td>
+                            <td>45</td>
+                            <td>90</td>
+                            <td><span class="badge warning">Subóptimo</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SECCIÓN 6: CONCLUSIÓN -->
+            <div class="section">
+                <h2>🎓 Conclusión y Recomendación</h2>
+
+                <div style="background: linear-gradient(135deg, #fff5f7 0%, #ffe0e6 100%); padding: 30px; border-radius: 10px;">
+                    <h3 style="color: #f5576c; margin-bottom: 15px;">📌 Respuesta Final</h3>
+                    <p style="font-size: 1.1em; line-height: 1.8; color: #333;">
+                        <strong>El excursionista debe llevar los Artículos 2 y 3</strong> para maximizar el valor 
+                        con respecto a su restricción de peso.
+                    </p>
+                    <p style="margin-top: 15px; font-size: 1.05em; line-height: 1.8; color: #444;">
+                        <strong>Detalles:</strong>
+                    </p>
+                    <ul style="margin-left: 20px; margin-top: 10px; color: #333; line-height: 1.8;">
+                        <li>✓ <strong>Artículo 2:</strong> Peso 23 libras, Valor 60</li>
+                        <li>✓ <strong>Artículo 3:</strong> Peso 35 libras, Valor 70</li>
+                        <li>= <strong>Total:</strong> Peso 58/60 libras, Valor 130 unidades</li>
+                        <li>📊 <strong>Utilización:</strong> 96% de la capacidad</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: #d4edda; padding: 20px; border-radius: 8px; border-left: 5px solid #27ae60;">
+                        <p style="color: #155724;"><strong>✓ Ventajas</strong></p>
+                        <ul style="margin-top: 10px; list-style: none; color: #155724;">
+                            <li>✓ Maximiza valor (130)</li>
+                            <li>✓ Usa casi toda capacidad</li>
+                            <li>✓ Matemáticamente óptima</li>
+                            <li>✓ Verificada y comprobada</li>
+                        </ul>
+                    </div>
+                    <div style="background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 5px solid #ff9800;">
+                        <p style="color: #856404;"><strong>⚠ Consideraciones</strong></p>
+                        <ul style="margin-top: 10px; list-style: none; color: #856404;">
+                            <li>⚠ Solo 2 libras de holgura</li>
+                            <li>⚠ Sin espacio para añadir</li>
+                            <li>⚠ Solución única óptima</li>
+                            <li>⚠ No hay alternativas mejores</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 7: APLICACIONES REALES -->
+            <div class="section">
+                <h2>🌍 Aplicaciones Reales del Problema de Mochila</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Industria</th>
+                            <th>Aplicación Práctica</th>
+                            <th>Similitud con Mochila</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>🚚 Logística</strong></td>
+                            <td>Cargar vehículos con máximo peso/volumen</td>
+                            <td>Peso límite = Capacidad del vehículo</td>
+                        </tr>
+                        <tr style="background: #fff5f7;">
+                            <td><strong>💰 Finanzas</strong></td>
+                            <td>Seleccionar proyectos con presupuesto limitado</td>
+                            <td>Presupuesto = Capacidad de la mochila</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🏭 Manufactura</strong></td>
+                            <td>Optimizar producción con capacidad limitada</td>
+                            <td>Horas de máquina = Peso límite</td>
+                        </tr>
+                        <tr style="background: #fff5f7;">
+                            <td><strong>🎮 Videojuegos</strong></td>
+                            <td>Sistemas de inventario y equipamiento</td>
+                            <td>Peso/espacio del inventario</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>📚 Taller 2: Problema de Optimización - Ejercicio de Mochila 0/1</strong></p>
+            <p style="margin-top: 10px; color: #999;">
+                Generado con Python • PuLP Solver • Programación Lineal Entera
+            </p>
+            <p style="margin-top: 15px; font-size: 0.9em;">
+                Fecha: 6 de Abril de 2026
+            </p>
+        </div>
+    </div>
+</body>
+</html>

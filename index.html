@@ -340,10 +340,54 @@
         .key-insight strong {
             color: #e65100;
         }
+        .nav-buttons {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #eee;
+        }
+
+        .nav-buttons a {
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .nav-buttons .btn-staffing {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-buttons .btn-staffing:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-buttons .btn-mochila {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .nav-buttons .btn-mochila:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- NAV BUTTONS -->
+        <div class="nav-buttons">
+            <a href="index.html" class="btn-staffing">🏪 Ejercicio 1: Staffing Farmatodo</a>
+            <span style="font-weight: bold; color: #667eea;">← Estás aquí →</span>
+            <a href="ejercicio2_mochila.html" class="btn-mochila">🎒 Ejercicio 2: Problema de Mochila</a>
+        </div>
+
         <!-- HEADER -->
         <div class="header">
             <h1>🏪 FARMATODO - Planificación Óptima de Cajeros</h1>
